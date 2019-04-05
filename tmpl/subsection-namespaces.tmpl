@@ -1,0 +1,17 @@
+<?js
+var self = this;
+?>
+
+<dl class="namespaces">
+    <?js list.forEach(function(item) { ?>
+        <dt>
+            <h4 class="name" onclick='window.location=$(this).find("a:first").attr("href"); return false;'>
+                <?js= self.linkto(item.longname, item.name) ?>
+                <div class="container-source members">
+                    <code><?js= self.linkto(item.longname, item.longname) ?></code>
+                </div>
+            </h4>
+        </dt>
+        <?js if (item.summary) { ?><dd><?js= item.summary ?></dd><?js } ?>
+    <?js }); ?>
+</dl>

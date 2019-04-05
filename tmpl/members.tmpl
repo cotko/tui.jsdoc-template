@@ -3,9 +3,11 @@
 var data = obj;
 var self = this;
 ?>
-<dt>
-<h4 class="name" id="<?js= id ?>">
-    <?js= data.attribs + name + (data.signature ? data.signature : '') ?>
+<dt class="members">
+<h4 class="name" id="<?js= id ?>" <?js= (data.deprecated ? "data-deprecated" : "") ?> >
+    <?js= data.attribs ?>
+    <span><?js= name ?></span>
+    <?js= (data.signature ? data.signature : '') ?>
     <?js if (data.meta && self.outputSourceFiles) {?>
     <div class="container-source members">
         <code><?js= self.linkto(meta.shortpath) ?></code>,
@@ -18,23 +20,12 @@ var self = this;
 <p class="summary"><?js= summary ?></p>
 <?js } ?>
 </dt>
-<dd>
+<dd class="members">
     <?js if (data.description) { ?>
     <div class="description">
         <?js= data.description ?>
     </div>
     <?js } ?>
-
-    <!--
-    <?js if (data.type && data.type.names) {?>
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                <?js= self.partial('type.tmpl', data.type.names) ?>
-            </li>
-        </ul>
-    <?js } ?>
-    -->
 
     <?js= this.partial('details.tmpl', data) ?>
 

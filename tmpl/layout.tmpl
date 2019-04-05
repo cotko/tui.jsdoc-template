@@ -46,7 +46,7 @@ if (package) {
     <![endif]-->
     <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow-night-eightes.css">
     <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
 
     <?js if (css) { ?>
@@ -58,11 +58,11 @@ if (package) {
 <body>
 <nav class="lnb" id="lnb">
     <div class="logo" style="<?js= style ?>">
-        <?js if (logoLink) { ?>
+        <?js if (logo && logoLink) { ?>
             <a href="<?js= logoLink?>" rel="noopener noreferrer" target="_blank">
                 <img src="<?js= logoUrl?>" width="100%" height="100%">
             </a>
-        <?js } else { ?>
+        <?js } else if (logo) { ?>
             <img src="<?js= logoUrl?>" width="100%" height="100%">
         <?js } ?>
     </div>
@@ -95,8 +95,12 @@ if (package) {
 </div>
 
 <footer>
-    <img class="logo" src="<?js= logoUrl?>" style="<?js= style ?>">
-    <div class="footer-text"><?js= footerText || 'NHN Entertainment. Frontend Development Lab' ?></div>
+    <?js if (logo) { ?>
+      <img class="logo" src="<?js= logoUrl?>" style="<?js= style ?>">
+    <?js } ?>
+    <?js if (footerText) { ?>
+      <div class="footer-text"><?js= footerText ?></div>
+    <?js } ?>
 </footer>
 <script>prettyPrint();</script>
 <script src="scripts/jquery.min.js"></script>

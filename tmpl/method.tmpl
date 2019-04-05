@@ -3,14 +3,16 @@ var data = obj;
 var self = this;
 ?>
 
-<dt>
+<dt class="methods">
     <?js if (data.kind !== 'module') { ?>
-        <h4 class="name" id="<?js= id ?>">
+        <h4 class="name" id="<?js= id ?>" <?js= (data.deprecated ? "data-deprecated" : "") ?> >
             <?js if (data.hideconstructor) { ?>
-                <?js= name ?>
+                <span><?js= name ?></span>
             <?js } else { ?>
-                <?js= (data.kind === 'class' ? 'new ' : '') + data.attribs + name + (data.signature ? data.signature : '') ?>
-            <?js } ?>    
+                <?js= (data.kind === 'class' ? 'new ' : '') + data.attribs ?>
+                <span><?js= name ?></span>
+            <?js } ?>
+            <?js= (data.signature ? data.signature : '') ?>
             <?js if (data.meta && self.outputSourceFiles) {?>
             <div class="container-source members">
                 <code><?js= self.linkto(meta.shortpath) ?></code>,
@@ -24,7 +26,7 @@ var self = this;
         <?js } ?>
     <?js } ?>
 </dt>
-<dd>
+<dd class="methods">
 
     <?js if (data.kind !== 'module' && data.description && !data.hideconstructor) { ?>
     <div class="description">
@@ -107,6 +109,21 @@ var self = this;
             <?js });
         ?></ul><?js } else {
             returns.forEach(function(r) { ?>
+                <?js= self.partial('returns.tmpl', r) ?>
+            <?js });
+        } ?>
+    </div>
+    <?js } ?>
+
+    <?js if (data.yields && yields.length) { ?>
+    <div class="container-returns">
+        <h5>Yields:</h5>
+        <?js if (yields.length > 1) { ?><ul><?js
+            yields.forEach(function(r) { ?>
+                <li><?js= self.partial('returns.tmpl', r) ?></li>
+            <?js });
+        ?></ul><?js } else {
+            yields.forEach(function(r) { ?>
                 <?js= self.partial('returns.tmpl', r) ?>
             <?js });
         } ?>

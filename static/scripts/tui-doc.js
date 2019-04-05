@@ -61,6 +61,7 @@ var $selected = $();
 var KEY_CODE_UP = 38;
 var KEY_CODE_DOWN = 40;
 var KEY_CODE_ENTER = 13;
+var KEY_CODE_ESCAPE = 27;
 
 $(window).on('click', function(event) {
     if (!$searchContainer[0].contains(event.target)) {
@@ -75,6 +76,17 @@ $searchedList.on('click', 'li', function(event) {
     moveToPage(url);
 });
 
+// focus the search
+$('body').on('keyup', function (e) {
+  let srcEl = e.srcElement
+    ? e.srcElement.tagName
+    : null;
+
+  if (srcEl !== 'INPUT' && srcEl !== 'TEXTAREA' && e.key === '/') {
+    $searchInput.focus()
+  }
+})
+
 $searchInput.on({
     keyup: onKeyupSearchInput,
     keydown: onKeydownInput
@@ -88,7 +100,7 @@ function onKeyupSearchInput(event) {
     }
 
     if (!inputText) {
-        $searchedList.html('');
+        clearSearchedList()
         return;
     }
 
@@ -109,13 +121,26 @@ function onKeydownInput(event) {
             if (!$selected.length) {
                 $selected = $searchedList.find('li').last();
             }
+            event.preventDefault()
+            event.stopPropagation()
             break;
         case KEY_CODE_DOWN:
             $selected = $selected.next();
             if (!$selected.length) {
                 $selected = $searchedList.find('li').first();
             }
+            event.preventDefault()
+            event.stopPropagation()
             break;
+        case KEY_CODE_ESCAPE:
+          let inputText = $searchInput.val()
+          if (inputText.length > 0) {
+            event.preventDefault()
+            event.stopPropagation()
+            $searchInput.val('').trigger('change')
+          }
+
+          break;
         default: break;
     }
 
@@ -137,9 +162,15 @@ function moveToPage(url) {
 }
 
 function clear() {
-    $searchedList.html('');
+    clearSearchedList()
     $searchInput.val('');
     $selected = $();
+}
+
+function clearSearchedList() {
+    $searchedList.html('');
+    $searchInput.removeClass('has-results', false)
+    $searchedList.hide()
 }
 
 function setList(inputText) {
@@ -150,7 +181,14 @@ function setList(inputText) {
     }).each(function(idx, item) {
         html += makeListItemHtml(item, inputText);
     });
-    $searchedList.html(html);
+
+    if (html && html.length) {
+      $searchInput.addClass('has-results')
+      $searchedList.show()
+      $searchedList.html(html);
+    } else {
+      clearSearchedList()
+    }
 }
 
 function isMatched(itemText, inputText) {
@@ -195,6 +233,72 @@ $lnb.find('.lnb-api').each(function() {
         .filter(function() {
             return $(this).next(':empty').length === 0;
         }).each(function() {
-            $(this).removeClass('hidden').on('click', toggleSubNav);
+            $(this)
+            .removeClass('hidden')
+            .on('click', toggleSubNav)
         });
 });
+
+/*************** README hacks ***************/
+
+// https://stackoverflow.com/a/5386150
+jQuery.fn.reverse = [].reverse; 
+
+// reverse so that nested lists do not get
+// discarted because of html replacement in this implementation
+$('article.readme ul').reverse().each((idx, el) => {
+  let $ul = $(el)
+  let isCheckedList = false
+
+  $ul.find('li').each((idx, el) => {
+    let $el = $(el)
+    let txt = $el.text()
+    let check = txt.trimStart().replace(/\s+/g, '').toLowerCase()
+    let checkStyle = false
+    if (check.startsWith('[]')) {
+      checkStyle = 'check-no'
+    } else if (check.startsWith('[x]')) {
+      checkStyle = 'check-yes'
+    }
+    if (checkStyle) {
+      isCheckedList = true
+      let html = $el.html()
+      html = html.substring(html.indexOf(']') + 1)
+      if (html.startsWith(' ')) {
+        html = html.substring(1)
+      }
+      $el.html(html).addClass(checkStyle)
+    }
+  })
+
+  if (isCheckedList) {
+    $ul.addClass('checked-list')
+  }
+
+})
+
+
+/*************** JSdoc hacks ***************/
+
+// hide empty details, too much templaters to change..
+$('dl.details').each((idx, el) => {
+  let isEmpty = $(el).html().trim().length === 0
+  if (isEmpty) {
+    $(el).remove()
+  }
+})
+$('dd').each((idx, el) => {
+  let isEmpty = $(el).html().trim().length === 0
+  if (isEmpty) {
+    $(el).remove()
+  }
+})
+
+// add classes to links with only the <code> inside
+$('a').each((idx, el) => {
+  let $a = $(el)
+  let html = $a.html().trim()
+  if (html.startsWith('<code>') && html.endsWith('</code>')) {
+    $a.addClass('coded-link')
+  }
+})

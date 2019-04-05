@@ -85,6 +85,12 @@ function needsSignature(doclet) {
             }
         }
     }
+    // and namespaces that are functions get a signature (but finding them is a
+    // bit messy)
+    else if (doclet.kind === 'namespace' && doclet.meta && doclet.meta.code &&
+        doclet.meta.code.type && doclet.meta.code.type.match(/[Ff]unction/)) {
+        needsSig = true;
+    }
 
     return needsSig;
 }
@@ -144,10 +150,24 @@ function buildAttribsString(attribs) {
     var attribsString = '';
 
     if (attribs && attribs.length) {
-        attribsString = util.format(
-            '<span class="icon green">%s</span> ',
-            attribs.join('</span>, <span class="icon green">')
-        );
+      let atts = attribs.map(att => {
+        let color = 'green'
+        if (att === 'private'
+          || att === 'package'
+          || att === 'protected'
+        ) {
+          color = 'orange'
+        } else if (att === 'readonly') {
+          color = 'blue'
+        }
+        return `<span class="icon ${color}">${att}</span>`
+
+      })
+      attribsString = atts.join(',')
+      //attribsString = util.format(
+      //    '<span class="icon blue">%s</span> ',
+      //    attribs.join('</span>, <span class="icon blue">')
+      //);
     }
 
     return attribsString;
@@ -192,7 +212,8 @@ function addSignatureReturns(f) {
     }
 
     if (source) {
-        returnTypes = addNonParamAttributes(f.returns);
+        //returnTypes = addNonParamAttributes(f.returns);
+        returnTypes = addNonParamAttributes(source);
     }
     if (returnTypes.length) {
         returnTypesString = util.format( ' &rarr; %s{%s}', attribsString, returnTypes.join('|') );
@@ -206,7 +227,7 @@ function addSignatureTypes(f) {
     var types = f.type ? buildItemTypeStrings(f) : [];
 
     f.signature = (f.signature || '') + '<span class="type-signature">' +
-        (types.length ? ' :' + types.join('|') : '') + '</span>';
+        (types.length ? ' : ' + types.join('|') : '') + '</span>';
 }
 
 function addAttribs(f) {

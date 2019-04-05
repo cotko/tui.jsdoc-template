@@ -4,64 +4,64 @@
 /* SPAN elements with the classes below are added by prettyprint. */
 /* plain text */
 .pln {
-  color: #4d4d4c; }
+  color: #aaa; }
 
 @media screen {
   /* string content */
   .str {
-    color: #718c00; }
+    color: #99cc99; }
 
   /* a keyword */
   .kwd {
-    color: #8959a8; }
+    color: #cc99cc; }
 
   /* a comment */
   .com {
-    color: #8e908c; }
+    color: #666666; }
 
   /* a type name */
   .typ {
-    color: #4271ae; }
+    color: #6699cc; }
 
   /* a literal value */
   .lit {
-    color: #f5871f; }
+    color: #f99157; }
 
   /* punctuation */
   .pun {
-    color: #4d4d4c; }
+    color: #cccccc; }
 
   /* lisp open bracket */
   .opn {
-    color: #4d4d4c; }
+    color: #cccccc; }
 
   /* lisp close bracket */
   .clo {
-    color: #4d4d4c; }
+    color: #cccccc; }
 
   /* a markup tag name */
   .tag {
-    color: #c82829; }
+    color: #f2777a; }
 
   /* a markup attribute name */
   .atn {
-    color: #f5871f; }
+    color: #f99157; }
 
   /* a markup attribute value */
   .atv {
-    color: #3e999f; }
+    color: #66cccc; }
 
   /* a declaration */
   .dec {
-    color: #f5871f; }
+    color: #f99157; }
 
   /* a variable name */
   .var {
-    color: #c82829; }
+    color: #f2777a; }
 
   /* a function name */
   .fun {
-    color: #4271ae; } }
+    color: #6699cc; } }
 /* Use higher contrast and text-weight for printable form. */
 @media print, projection {
   .str {
