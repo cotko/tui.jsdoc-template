@@ -8,6 +8,13 @@ var self = this;
     <?js= data.attribs ?>
     <span><?js= name ?></span>
     <?js= (data.signature ? data.signature : '') ?>
+
+    <?js if (data.type && data.type.names) { ?>
+       <div>
+       &nbsp;{<?js= self.partial('type.tmpl', data.type.names) ?>}
+       </div>
+    <?js } ?>
+
     <?js if (data.meta && self.outputSourceFiles) {?>
     <div class="container-source members">
         <code><?js= self.linkto(meta.shortpath) ?></code>,

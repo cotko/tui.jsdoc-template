@@ -372,7 +372,9 @@ a:hover { color: #428bca; }
 .main section article table td.attributes,
 .main section article table td.default {
     // max-width: 100px;
-    min-width: 80px;
+    //min-width: 80px;
+    width: 1px;
+    white-space: nowrap;
     word-break: break-all;
 }
 .main section article table td.type,
